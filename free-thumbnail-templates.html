@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free YouTube Thumbnail Templates — No Sign-Up Required | Thumbly</title>
+<meta name="description" content="Download free YouTube thumbnail templates instantly. 2 free designs, no account needed. Dark Bold and Red Heat templates built to maximise click-through rate.">
+<link rel="canonical" href="https://smuffinz99-prog.github.io/thumbly/free-thumbnail-templates.html">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#f85149;--accent2:#ff6b35;--radius:10px}
+body{background:var(--bg);color:var(--text);font:16px/1.6 system-ui,sans-serif}
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:var(--bg);border-bottom:1px solid var(--border)}
+.logo{font-size:20px;font-weight:900;text-decoration:none;color:var(--text)}.logo span{color:var(--accent)}
+.nav-cta{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:8px 18px;border-radius:var(--radius);font-weight:700;font-size:13px;text-decoration:none}
+.page{max-width:900px;margin:0 auto;padding:60px 24px}
+h1{font-size:clamp(26px,4vw,42px);font-weight:900;margin-bottom:16px}
+h1 span{color:var(--accent)}
+.intro{font-size:16px;color:var(--muted);margin-bottom:40px;max-width:600px}
+.free-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:20px;margin-bottom:48px}
+.tpl{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface)}
+.tpl canvas{width:100%;height:auto;display:block}
+.tpl-body{padding:16px 18px}
+.tpl-name{font-size:17px;font-weight:700;margin-bottom:6px}
+.tpl-desc{font-size:14px;color:var(--muted);margin-bottom:14px}
+.tpl-btn{display:block;text-align:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:10px;border-radius:var(--radius);font-weight:700;font-size:14px;text-decoration:none}
+.upsell{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:36px;text-align:center}
+.upsell h2{font-size:22px;font-weight:800;margin-bottom:10px}
+.upsell p{font-size:14px;color:var(--muted);margin-bottom:20px}
+.upsell a{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:12px 28px;border-radius:var(--radius);font-weight:700;font-size:15px;text-decoration:none}
+footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px;margin-top:60px}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html"><span>Thumb</span>ly</a>
+  <a class="nav-cta" href="app.html">Use Free Templates →</a>
+</nav>
+<div class="page">
+  <h1>Free YouTube Thumbnail <span>Templates</span></h1>
+  <p class="intro">Start designing immediately — no account, no credit card. Two free templates that work for any niche. Download 3 thumbnails per day, free forever.</p>
+  <div class="free-grid" id="free-grid"></div>
+  <div class="upsell">
+    <h2>Need more variety? Upgrade to Pro.</h2>
+    <p>Unlock 12 more templates including Fire Storm, Gaming Neon, Gold Luxury, Cinematic and more — plus no watermark and unlimited downloads.</p>
+    <a href="app.html">See All 14 Templates →</a>
+  </div>
+</div>
+<footer>© 2026 Thumbly — <a href="index.html" style="color:var(--muted)">Home</a> · <a href="thumbnail-templates.html" style="color:var(--muted)">All Templates</a></footer>
+<script src="templates.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var grid = document.getElementById('free-grid');
+  var descs = { 'dark-bold': 'Clean dark navy gradient. Works for any topic — tech, gaming, education, lifestyle.', 'red-heat': 'Bold red gradient with high energy. Perfect for gaming, reaction, or dramatic content.' };
+  window.TEMPLATES.filter(function(t){return !t.pro;}).forEach(function(tpl){
+    var card = document.createElement('div'); card.className='tpl';
+    var mc = document.createElement('canvas'); mc.width=640; mc.height=360;
+    card.appendChild(mc);
+    var body = document.createElement('div'); body.className='tpl-body';
+    body.innerHTML='<div class="tpl-name">'+tpl.name+'</div><div class="tpl-desc">'+(descs[tpl.id]||'')+'</div><a class="tpl-btn" href="app.html">Use this template →</a>';
+    card.appendChild(body); grid.appendChild(card);
+    var ctx=mc.getContext('2d'), mW=640, mH=360, bg=tpl.bg;
+    if(bg.type==='solid'){ctx.fillStyle=bg.color;ctx.fillRect(0,0,mW,mH);}
+    else{var a=(bg.angle||135)*Math.PI/180;var g=ctx.createLinearGradient(mW/2-Math.cos(a)*mW/2,mH/2-Math.sin(a)*mH/2,mW/2+Math.cos(a)*mW/2,mH/2+Math.sin(a)*mH/2);g.addColorStop(0,bg.from);g.addColorStop(1,bg.to);ctx.fillStyle=g;ctx.fillRect(0,0,mW,mH);}
+    ctx.fillStyle=tpl.titleColor||'#fff';ctx.font='bold '+Math.round(mH*0.20)+'px Impact,Arial Black,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.strokeStyle=tpl.strokeColor||'#000';ctx.lineWidth=Math.round(mH*0.025);ctx.lineJoin='round';
+    ctx.strokeText('YOUR',mW/2,mH*0.38);ctx.fillText('YOUR',mW/2,mH*0.38);
+    ctx.strokeText('TITLE',mW/2,mH*0.64);ctx.fillText('TITLE',mW/2,mH*0.64);
+    ctx.strokeStyle=tpl.titleColor||'#fff';ctx.globalAlpha=0.4;ctx.lineWidth=3;ctx.strokeRect(8,8,mW-16,mH-16);ctx.globalAlpha=1;
+  });
+});
+</script>
+</body>
+</html>

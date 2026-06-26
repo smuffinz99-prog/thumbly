@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thumbly — Free YouTube Thumbnail Maker | Make Thumbnails That Get Clicked</title>
+<meta name="description" content="Create stunning YouTube thumbnails in seconds. Free templates, no design skills needed. Instant download — no sign-up required.">
+<link rel="canonical" href="https://smuffinz99-prog.github.io/thumbly/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Thumbly — Free YouTube Thumbnail Maker">
+<meta property="og:description" content="Create stunning YouTube thumbnails in seconds. 14 pro templates, instant download.">
+<meta property="og:url" content="https://smuffinz99-prog.github.io/thumbly/">
+<meta property="og:type" content="website">
+
+<!-- Schema.org FAQ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Is Thumbly free?","acceptedAnswer":{"@type":"Answer","text":"Yes! You can create and download 3 thumbnails per day for free. Upgrade to Pro for unlimited exports, no watermark, and 12 extra templates."}},
+    {"@type":"Question","name":"What size are YouTube thumbnails?","acceptedAnswer":{"@type":"Answer","text":"YouTube recommends 1280×720 pixels (16:9 ratio). Thumbly exports at exactly that resolution."}},
+    {"@type":"Question","name":"Do I need to create an account?","acceptedAnswer":{"@type":"Answer","text":"No — Thumbly works entirely in your browser. No sign-up, no email required. Just make thumbnails and download."}},
+    {"@type":"Question","name":"Can I use my own photo as the background?","acceptedAnswer":{"@type":"Answer","text":"Yes. Upload any JPG, PNG, or WEBP image as your thumbnail background. Your photo never leaves your device."}}
+  ]
+}
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:      #0d1117;
+    --surface: #161b22;
+    --border:  #30363d;
+    --text:    #e6edf3;
+    --muted:   #8b949e;
+    --accent:  #f85149;
+    --accent2: #ff6b35;
+    --pro:     #f0c040;
+    --green:   #3fb950;
+    --radius:  10px;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, sans-serif; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  /* ── Announce bar ── */
+  .announce {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    text-align: center; padding: 9px 20px; font-size: 13px; font-weight: 600;
+  }
+  .announce a { text-decoration: underline; opacity: .9; }
+
+  /* ── Nav ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 40px; background: var(--bg);
+    position: sticky; top: 0; z-index: 50; border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-size: 22px; font-weight: 900; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; font-size: 14px; color: var(--muted); }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; padding: 9px 20px; border-radius: var(--radius);
+    font-weight: 700; font-size: 14px; cursor: pointer; border: none;
+  }
+  .nav-cta:hover { opacity: .9; }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center; padding: 90px 24px 70px;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, #2a0a00 0%, transparent 70%);
+  }
+  .hero-badge {
+    display: inline-block; background: rgba(248,81,73,.15); color: var(--accent);
+    border: 1px solid rgba(248,81,73,.3); border-radius: 100px;
+    padding: 5px 14px; font-size: 13px; font-weight: 600; margin-bottom: 22px;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 72px); font-weight: 900; line-height: 1.1;
+    max-width: 820px; margin: 0 auto 20px;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(135deg, var(--accent), var(--accent2), #ffd700);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero p { font-size: 18px; color: var(--muted); max-width: 540px; margin: 0 auto 36px; }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; padding: 14px 30px; border-radius: var(--radius);
+    font-weight: 800; font-size: 16px; cursor: pointer; border: none;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-secondary {
+    background: var(--surface); color: var(--text); border: 1px solid var(--border);
+    padding: 14px 30px; border-radius: var(--radius); font-weight: 700; font-size: 16px;
+    text-decoration: none; display: inline-block;
+  }
+  .hero-note { font-size: 13px; color: var(--muted); margin-top: 14px; }
+
+  /* ── Thumbnail grid preview ── */
+  .preview-section { padding: 20px 24px 80px; }
+  .preview-section h2 { text-align: center; font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 28px; }
+  .thumb-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .thumb-card {
+    border-radius: var(--radius); overflow: hidden; position: relative;
+    aspect-ratio: 16/9; background: var(--surface); border: 1px solid var(--border);
+  }
+  .thumb-card canvas { width: 100%; height: 100%; display: block; }
+  .thumb-card .pro-pill {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--pro); color: #000; font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 100px;
+  }
+
+  /* ── Features ── */
+  .features { padding: 80px 24px; background: var(--surface); }
+  .features-inner { max-width: 1100px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 56px; }
+  .section-label { font-size: 13px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+  .section-title { font-size: clamp(26px, 4vw, 42px); font-weight: 800; }
+  .section-sub { font-size: 16px; color: var(--muted); margin-top: 12px; }
+  .feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+  .feat-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+  .feat-icon { font-size: 32px; margin-bottom: 14px; }
+  .feat-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .feat-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* ── How it works ── */
+  .how { padding: 80px 24px; }
+  .how-inner { max-width: 900px; margin: 0 auto; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 40px; margin-top: 48px; }
+  .step { text-align: center; }
+  .step-num {
+    width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    font-size: 18px; font-weight: 900;
+  }
+  .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .step p { font-size: 14px; color: var(--muted); }
+
+  /* ── Pricing ── */
+  .pricing { padding: 80px 24px; background: var(--surface); }
+  .pricing-inner { max-width: 900px; margin: 0 auto; }
+  .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+  .plan {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 36px;
+  }
+  .plan.featured { border-color: var(--accent); position: relative; }
+  .plan-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #fff; font-size: 11px; font-weight: 700;
+    padding: 4px 14px; border-radius: 100px; white-space: nowrap;
+  }
+  .plan-name { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+  .plan-price { font-size: 42px; font-weight: 900; margin-bottom: 4px; }
+  .plan-price span { font-size: 16px; color: var(--muted); font-weight: 400; }
+  .plan-desc { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+  .plan-features { list-style: none; margin-bottom: 28px; }
+  .plan-features li { font-size: 14px; padding: 6px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start; }
+  .plan-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+  .plan-features li.no::before { content: '✗'; color: var(--muted); }
+  .plan-btn {
+    display: block; width: 100%; text-align: center; padding: 13px;
+    border-radius: var(--radius); font-weight: 700; font-size: 15px; cursor: pointer; border: none;
+  }
+  .plan-btn.free { background: var(--surface); color: var(--text); border: 1px solid var(--border); text-decoration: none; }
+  .plan-btn.paid { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+
+  /* ── FAQ ── */
+  .faq { padding: 80px 24px; }
+  .faq-inner { max-width: 740px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 22px 0; }
+  .faq-q { font-size: 16px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .faq-q::after { content: '+'; font-size: 22px; color: var(--muted); flex-shrink: 0; transition: transform .2s; }
+  .faq-item.open .faq-q::after { content: '−'; }
+  .faq-a { font-size: 14px; color: var(--muted); line-height: 1.7; margin-top: 12px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+
+  /* ── Footer ── */
+  footer { background: var(--surface); border-top: 1px solid var(--border); padding: 48px 40px 32px; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; }
+  .footer-top { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; margin-bottom: 36px; }
+  .footer-brand .logo { font-size: 20px; font-weight: 900; margin-bottom: 10px; }
+  .footer-brand .logo span { color: var(--accent); }
+  .footer-brand p { font-size: 13px; color: var(--muted); max-width: 240px; line-height: 1.6; }
+  .footer-col h4 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; }
+  .footer-col a { display: block; font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+  .footer-col a:hover { color: var(--text); }
+  .footer-bottom { border-top: 1px solid var(--border); padding-top: 22px; font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  @media (max-width: 640px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 60px 20px 50px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .footer-top { flex-direction: column; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Announce bar -->
+<div class="announce">
+  🎉 New: 14 thumbnail templates including Fire Storm, Gaming Neon, Gold Luxury &amp; more.
+  <a href="app.html">Try free →</a>
+</div>
+
+<!-- Nav -->
+<nav>
+  <a class="nav-logo" href="#"><span>Thumb</span>ly</a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="youtube-thumbnail-maker.html">YouTube Thumbnails</a>
+    <a href="thumbnail-templates.html">Templates</a>
+  </div>
+  <a class="nav-cta" href="app.html">Make a Thumbnail →</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">🔥 Free to use — no sign-up</div>
+  <h1>YouTube thumbnails that <span class="grad">actually get clicked</span></h1>
+  <p>Design eye-catching thumbnails in under 60 seconds. Professional templates, image upload, instant 1280×720 download.</p>
+  <div class="hero-btns">
+    <a class="btn-primary" href="app.html">Create Free Thumbnail →</a>
+    <a class="btn-secondary" href="#pricing">See Pro Plans</a>
+  </div>
+  <p class="hero-note">No account needed · 3 free exports/day · Works in any browser</p>
+</section>
+
+<!-- Template preview grid -->
+<section class="preview-section">
+  <h2>14 ready-made templates — just add your text</h2>
+  <div class="thumb-grid" id="preview-grid"></div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="section-header">
+      <div class="section-label">Why Thumbly</div>
+      <h2 class="section-title">Everything you need, nothing you don't</h2>
+      <p class="section-sub">No bloated editor. No subscription wall. Just fast, great-looking thumbnails.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <h3>Ready in 60 seconds</h3>
+        <p>Pick a template, type your title, download. No design experience required — the hard work is done for you.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📸</div>
+        <h3>Upload your own photo</h3>
+        <p>Use your face or any image as the background. Thumbly blends it with the template overlay for a polished look.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🎨</div>
+        <h3>14 click-worthy templates</h3>
+        <p>Fire Storm, Gaming Neon, Cinematic, Gold Luxury and more — every template is built to maximise click-through rate.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📐</div>
+        <h3>Perfect YouTube dimensions</h3>
+        <p>Every download is exactly 1280×720 pixels — the YouTube-recommended thumbnail size. PNG format, no compression.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔒</div>
+        <h3>Your files stay private</h3>
+        <p>Everything runs in your browser. Photos are never uploaded to a server. 100% private, 100% offline-capable.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📱</div>
+        <h3>Works on any device</h3>
+        <p>Desktop, tablet, mobile — Thumbly works wherever you are. No app to install, no updates to wait for.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="how">
+  <div class="how-inner">
+    <div class="section-header">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">Three steps to a scroll-stopping thumbnail</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Pick a template</h3>
+        <p>Choose from 14 professionally designed templates. 2 are free, 12 unlock with Pro.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Add your text</h3>
+        <p>Type your title, subtitle, and channel name. Big Impact font auto-sizes to fit perfectly.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Download &amp; upload</h3>
+        <p>Hit Download to get your 1280×720 PNG. Upload it straight to YouTube.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Watch your CTR climb</h3>
+        <p>Eye-catching thumbnails mean more clicks, more views, more growth.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+  <div class="pricing-inner">
+    <div class="section-header">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Simple, honest pricing</h2>
+      <p class="section-sub">Start free. Upgrade when you're ready.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0 <span>forever</span></div>
+        <div class="plan-desc">Perfect for getting started.</div>
+        <ul class="plan-features">
+          <li>3 downloads per day</li>
+          <li>2 templates</li>
+          <li>Background photo upload</li>
+          <li>1280×720 PNG export</li>
+          <li class="no">Watermark on downloads</li>
+          <li class="no">Premium templates locked</li>
+          <li class="no">Custom colors</li>
+        </ul>
+        <a class="plan-btn free" href="app.html">Start for free</a>
+      </div>
+      <div class="plan featured">
+        <div class="plan-badge">MOST POPULAR</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price"><span data-price></span> <span>/ month</span></div>
+        <div class="plan-desc">For creators who make thumbnails weekly.</div>
+        <ul class="plan-features">
+          <li>Unlimited downloads</li>
+          <li>All 14 templates</li>
+          <li>Background photo upload</li>
+          <li>1280×720 HD PNG export</li>
+          <li>No watermark</li>
+          <li>Custom title &amp; accent colors</li>
+          <li>Cancel any time</li>
+        </ul>
+        <button class="plan-btn paid" id="pricing-cta">Get Pro →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="faq-inner">
+    <div class="section-header">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">Common questions</h2>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is Thumbly free to use?</div>
+      <div class="faq-a">Yes — you can create and download 3 thumbnails per day completely free. No credit card, no account needed. Upgrade to Pro for unlimited downloads, no watermark, and all 14 templates.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What size are the downloaded thumbnails?</div>
+      <div class="faq-a">Every thumbnail downloads at exactly 1280×720 pixels in PNG format — the size YouTube recommends for thumbnails. There's no compression, so the quality is pixel-perfect.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I need to create an account?</div>
+      <div class="faq-a">No. Thumbly runs entirely in your browser. You don't need to sign up or give us your email address. Just open the editor and start making thumbnails.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I upload my own photo as the background?</div>
+      <div class="faq-a">Yes — click "Upload photo" in the editor and pick any JPG, PNG, or WEBP image from your device. Your photo is processed locally in your browser and is never uploaded to our servers.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What fonts are used?</div>
+      <div class="faq-a">Most templates use Impact or Arial Black — the same fonts used by the biggest YouTubers. These fonts are built into every operating system and browser, so no additional loading time.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I cancel Pro?</div>
+      <div class="faq-a">You can cancel Pro any time directly from your Stripe billing portal. No hoops to jump through — just one click. Your access continues until the end of the billing period.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer CTA -->
+<section style="padding: 70px 24px; text-align: center; background: linear-gradient(135deg, #1a0800 0%, #0d1117 60%);">
+  <h2 style="font-size: clamp(26px,4vw,42px); font-weight: 900; margin-bottom: 16px;">Ready to make thumbnails that convert?</h2>
+  <p style="font-size: 16px; color: var(--muted); margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto;">Join creators using Thumbly to make thumbnails that get more clicks. Start free in 30 seconds.</p>
+  <a class="btn-primary" href="app.html" style="font-size: 18px; padding: 16px 36px;">Create My Thumbnail →</a>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo"><span>Thumb</span>ly</div>
+        <p>The fastest way to make YouTube thumbnails that get clicked. Free forever, Pro for power users.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="app.html">Thumbnail Maker</a>
+        <a href="#pricing">Pricing</a>
+        <a href="thumbnail-templates.html">Templates</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="youtube-thumbnail-maker.html">YouTube Guide</a>
+        <a href="free-thumbnail-templates.html">Free Templates</a>
+        <a href="thumbnail-size-guide.html">Thumbnail Size Guide</a>
+      </div>
+      <div class="footer-col">
+        <h4>Compare</h4>
+        <a href="canva-alternative.html">vs Canva</a>
+        <a href="adobe-express-alternative.html">vs Adobe Express</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Thumbly. All rights reserved.</span>
+      <span>Built with ❤️ for YouTubers</span>
+    </div>
+  </div>
+</footer>
+
+<script src="templates.js"></script>
+<script src="pricing.js"></script>
+<script>
+(function () {
+  var W = 1280, H = 720;
+
+  // ── Render mini preview grid ──────────────────────────────────────────────────
+  function hex2rgb(h){ var v=h.replace('#',''); return [parseInt(v.slice(0,2),16),parseInt(v.slice(2,4),16),parseInt(v.slice(4,6),16)]; }
+
+  function drawMini(mc, tpl) {
+    var mW = mc.width, mH = mc.height;
+    var ctx = mc.getContext('2d');
+    var bg = tpl.bg;
+    if (bg.type === 'solid') {
+      ctx.fillStyle = bg.color; ctx.fillRect(0, 0, mW, mH);
+    } else {
+      var a = (bg.angle||135)*Math.PI/180;
+      var g = ctx.createLinearGradient(mW/2-Math.cos(a)*mW/2, mH/2-Math.sin(a)*mH/2, mW/2+Math.cos(a)*mW/2, mH/2+Math.sin(a)*mH/2);
+      g.addColorStop(0, bg.from); g.addColorStop(1, bg.to);
+      ctx.fillStyle = g; ctx.fillRect(0, 0, mW, mH);
+    }
+    // Simple text overlay
+    ctx.fillStyle = tpl.titleColor || '#fff';
+    ctx.font = 'bold ' + Math.round(mH * 0.22) + 'px Impact, Arial Black, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.strokeStyle = tpl.strokeColor || '#000';
+    ctx.lineWidth = Math.round(mH * 0.028); ctx.lineJoin = 'round';
+    ctx.strokeText('YOUR', mW/2, mH * 0.38);
+    ctx.fillText('YOUR', mW/2, mH * 0.38);
+    ctx.strokeText('TITLE', mW/2, mH * 0.64);
+    ctx.fillText('TITLE', mW/2, mH * 0.64);
+    // Border
+    ctx.strokeStyle = tpl.titleColor || '#fff'; ctx.globalAlpha = 0.45; ctx.lineWidth = 3;
+    ctx.strokeRect(8, 8, mW-16, mH-16);
+    ctx.globalAlpha = 1;
+  }
+
+  function buildGrid() {
+    var grid = document.getElementById('preview-grid'); if (!grid) return;
+    var show = window.TEMPLATES.slice(0, 8);
+    show.forEach(function (tpl) {
+      var card = document.createElement('div');
+      card.className = 'thumb-card';
+      var mc = document.createElement('canvas');
+      mc.width = 640; mc.height = 360;
+      card.appendChild(mc);
+      drawMini(mc, tpl);
+      if (tpl.pro) {
+        var pill = document.createElement('div');
+        pill.className = 'pro-pill'; pill.textContent = 'PRO';
+        card.appendChild(pill);
+      }
+      card.addEventListener('click', function () { location.href = 'app.html'; });
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Pricing CTA ───────────────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function () {
+    buildGrid();
+    var btn = document.getElementById('pricing-cta');
+    if (btn) btn.addEventListener('click', function () {
+      window.THUMBLY_CHECKOUT && window.THUMBLY_CHECKOUT();
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(function (q) {
+      q.addEventListener('click', function () {
+        var item = q.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

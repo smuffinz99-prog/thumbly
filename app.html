@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thumbly — YouTube Thumbnail Maker</title>
+<meta name="description" content="Create stunning YouTube thumbnails in seconds. Free templates, image upload, instant download.">
+<link rel="canonical" href="https://smuffinz99-prog.github.io/thumbly/app.html">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:      #0d1117;
+    --surface: #161b22;
+    --border:  #30363d;
+    --text:    #e6edf3;
+    --muted:   #8b949e;
+    --accent:  #f85149;
+    --accent2: #ff6b35;
+    --pro:     #f0c040;
+    --radius:  8px;
+    --panel:   300px;
+  }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font: 14px/1.5 system-ui, sans-serif; }
+
+  /* ── Navbar ── */
+  .navbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .navbar .logo { font-size: 20px; font-weight: 800; color: var(--text); text-decoration: none; }
+  .navbar .logo span { color: var(--accent); }
+  .navbar .nav-right { display: flex; align-items: center; gap: 10px; }
+  .pro-badge { background: var(--pro); color: #000; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 100px; display: none; }
+  .upgrade-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; border: none; padding: 7px 16px; border-radius: var(--radius);
+    font-weight: 700; font-size: 13px; cursor: pointer;
+  }
+
+  /* ── Editor layout ── */
+  .editor {
+    display: grid;
+    grid-template-columns: var(--panel) 1fr;
+    height: calc(100vh - 49px);
+    overflow: hidden;
+  }
+
+  /* ── Side panel ── */
+  .panel {
+    background: var(--surface); border-right: 1px solid var(--border);
+    overflow-y: auto; overflow-x: hidden;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .panel-section { border-bottom: 1px solid var(--border); }
+  .panel-section h3 {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); padding: 12px 14px 8px;
+  }
+
+  /* Template picker */
+  #template-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 10px 12px; }
+  .tpl-card { position: relative; cursor: pointer; border-radius: 6px; overflow: hidden; border: 2px solid transparent; transition: border-color .15s; }
+  .tpl-card:hover { border-color: var(--muted); }
+  .tpl-card.active { border-color: var(--accent); }
+  .tpl-card.locked { opacity: .6; }
+  .tpl-card canvas { display: block; width: 100%; height: auto; border-radius: 4px; }
+  .tpl-card span { display: block; font-size: 10px; font-weight: 600; color: var(--muted); padding: 3px 4px 4px; text-align: center; }
+  .tpl-card.active span { color: var(--accent); }
+
+  /* Inputs */
+  .field { padding: 6px 14px; }
+  .field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; font-weight: 600; }
+  .field input[type="text"], .field select {
+    width: 100%; padding: 7px 10px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--text); font-size: 13px; outline: none;
+  }
+  .field input[type="text"]:focus, .field select:focus { border-color: var(--accent); }
+  .field input[type="color"] { width: 40px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; background: transparent; padding: 2px; }
+  .color-row { display: flex; align-items: center; gap: 10px; }
+
+  /* Image upload */
+  .upload-area {
+    margin: 6px 14px 10px; border: 1.5px dashed var(--border); border-radius: var(--radius);
+    padding: 14px 10px; text-align: center; cursor: pointer; transition: border-color .15s;
+  }
+  .upload-area:hover { border-color: var(--accent); }
+  .upload-area input[type="file"] { display: none; }
+  .upload-area p { font-size: 12px; color: var(--muted); }
+  .upload-area .upload-icon { font-size: 22px; margin-bottom: 4px; }
+  #remove-bg { display: none; font-size: 11px; color: var(--accent); cursor: pointer; background: none; border: none; padding: 0 14px 8px; text-align: left; }
+
+  /* Pro lock section */
+  .pro-gate { padding: 10px 14px 12px; }
+  .pro-gate p { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .btn-full { display: block; width: 100%; text-align: center; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; padding: 9px; border-radius: var(--radius); font-weight: 700; font-size: 13px; cursor: pointer; }
+
+  /* ── Canvas area ── */
+  .canvas-area {
+    background: #060a0f; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px; padding: 24px;
+    overflow: auto;
+  }
+  .canvas-wrap { position: relative; width: 100%; max-width: 854px; }
+  #thumb {
+    display: block; width: 100%; height: auto;
+    border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+  }
+  .canvas-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; max-width: 854px; gap: 12px;
+  }
+  #export-info { font-size: 12px; color: var(--muted); }
+  #export-btn {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: #fff; border: none; padding: 10px 24px; border-radius: var(--radius);
+    font-weight: 700; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; gap: 7px;
+  }
+  #export-btn:hover { opacity: .9; }
+
+  /* ── Upgrade bar ── */
+  #upgrade-bar {
+    background: linear-gradient(90deg, #1a0a00, #2a1000);
+    border-top: 1px solid #7a3a00; padding: 10px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    font-size: 13px;
+  }
+  #upgrade-bar p { color: #fbbf24; }
+  #upgrade-bar p span { color: var(--muted); }
+  #upgrade-bar .upgrade-btn { flex-shrink: 0; }
+
+  /* ── Upgrade modal ── */
+  #upgrade-modal {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,0.75); align-items: center; justify-content: center;
+  }
+  .modal-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 36px; max-width: 420px; width: 90%; text-align: center; position: relative;
+  }
+  .modal-box .modal-icon { font-size: 42px; margin-bottom: 12px; }
+  .modal-box h2 { font-size: 22px; margin-bottom: 8px; }
+  .modal-box p { color: var(--muted); font-size: 14px; margin-bottom: 22px; line-height: 1.6; }
+  .modal-box ul { text-align: left; margin: 0 0 24px; padding: 0 0 0 18px; color: var(--muted); font-size: 13px; line-height: 2; }
+  .modal-box ul li strong { color: var(--text); }
+  .modal-price { font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 20px; }
+  .modal-price span { font-size: 14px; color: var(--muted); font-weight: 400; }
+  #checkout-btn {
+    display: block; width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff; border: none; padding: 14px; border-radius: var(--radius);
+    font-weight: 800; font-size: 16px; cursor: pointer; margin-bottom: 10px;
+  }
+  .modal-fine { font-size: 11px; color: var(--muted); }
+  #modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer; }
+
+  /* ── Pro toast ── */
+  #pro-toast {
+    display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200;
+    background: #16a34a; color: #fff; padding: 12px 24px; border-radius: 100px;
+    font-weight: 700; font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    align-items: center; gap: 8px;
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 680px) {
+    .editor { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; overflow: visible; }
+    .panel { max-height: 420px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a class="logo" href="index.html"><span>Thumb</span>ly</a>
+  <div class="nav-right">
+    <span class="pro-badge" id="pro-badge">PRO</span>
+    <button class="upgrade-btn">Upgrade to Pro</button>
+  </div>
+</nav>
+
+<div class="editor">
+  <!-- Side panel -->
+  <aside class="panel">
+
+    <div class="panel-section">
+      <h3>Template</h3>
+      <div id="template-picker"></div>
+    </div>
+
+    <div class="panel-section">
+      <h3>Title</h3>
+      <div class="field">
+        <label>Line 1 (big)</label>
+        <input type="text" id="title-line1" placeholder="YOUR BIG" maxlength="40">
+      </div>
+      <div class="field">
+        <label>Line 2</label>
+        <input type="text" id="title-line2" placeholder="TITLE HERE" maxlength="40">
+      </div>
+      <div class="field">
+        <label>Subtitle (small)</label>
+        <input type="text" id="subtitle" placeholder="Optional subtitle..." maxlength="60">
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>Layout</h3>
+      <div class="field">
+        <label>Text position</label>
+        <select id="text-position">
+          <option value="bottom">Bottom (recommended)</option>
+          <option value="center">Center</option>
+          <option value="top">Top</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Badge label (e.g. TOP 10)</label>
+        <input type="text" id="badge-text" placeholder="Leave empty for no badge" maxlength="20">
+      </div>
+      <div class="field">
+        <label>Channel name</label>
+        <input type="text" id="channel-name" placeholder="@yourchannel" maxlength="40">
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>Background photo</h3>
+      <label class="upload-area" for="bg-upload">
+        <input type="file" id="bg-upload" accept="image/*">
+        <div class="upload-icon">📸</div>
+        <p>Click to upload photo<br><small>JPG, PNG, WEBP</small></p>
+      </label>
+      <button id="remove-bg">✕ Remove photo</button>
+    </div>
+
+    <div class="panel-section pro-only" style="display:none">
+      <h3>Colors <span style="color:var(--pro);font-size:10px;font-weight:700">PRO</span></h3>
+      <div class="field">
+        <label>Title color</label>
+        <div class="color-row">
+          <input type="color" id="title-color" value="#ffffff">
+          <span style="font-size:12px;color:var(--muted)">Override template title color</span>
+        </div>
+      </div>
+      <div class="field" style="padding-bottom:12px">
+        <label>Accent / badge color</label>
+        <div class="color-row">
+          <input type="color" id="accent-color" value="#f59e0b">
+          <span style="font-size:12px;color:var(--muted)">Override badge & accent color</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section free-only">
+      <div class="pro-gate">
+        <p>🔒 Unlock 12 more templates, remove the watermark, and get color control.</p>
+        <button class="btn-full upgrade-btn">Upgrade to Pro — <span data-price></span></button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Canvas area -->
+  <main class="canvas-area">
+    <div class="canvas-wrap">
+      <canvas id="thumb" width="1280" height="720"></canvas>
+    </div>
+    <div class="canvas-toolbar">
+      <span id="export-info">3 free exports left today</span>
+      <button id="export-btn">⬇ Download Thumbnail</button>
+    </div>
+  </main>
+</div>
+
+<!-- Upgrade bar (free users) -->
+<div id="upgrade-bar" class="free-only">
+  <p>You're on the free plan. <span>Watermark visible on downloads.</span></p>
+  <button class="upgrade-btn">Remove watermark — <span data-price></span></button>
+</div>
+
+<!-- Upgrade modal -->
+<div id="upgrade-modal">
+  <div class="modal-box">
+    <button id="modal-close" aria-label="Close">×</button>
+    <div class="modal-icon">⚡</div>
+    <h2>Upgrade to Thumbly Pro</h2>
+    <p>Everything you need to make thumbnails that actually get clicked.</p>
+    <ul>
+      <li><strong>No watermark</strong> — clean professional exports</li>
+      <li><strong>12 premium templates</strong> — Fire Storm, Gaming Neon, Gold Luxury &amp; more</li>
+      <li><strong>Custom colors</strong> — override title &amp; accent colors</li>
+      <li><strong>Unlimited exports</strong> — no daily limit</li>
+      <li><strong>1280×720 HD PNG</strong> — full YouTube resolution</li>
+    </ul>
+    <div class="modal-price"><span data-price></span> <span>/ month</span></div>
+    <button id="checkout-btn">Get Thumbly Pro →</button>
+    <div class="modal-fine">Cancel anytime. Instant access after payment.</div>
+  </div>
+</div>
+
+<!-- Pro success toast -->
+<div id="pro-toast">🎉 Welcome to Thumbly Pro! Watermark removed.</div>
+
+<script src="templates.js"></script>
+<script src="pricing.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

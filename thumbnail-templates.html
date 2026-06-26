@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YouTube Thumbnail Templates — 14 Free &amp; Pro Designs | Thumbly</title>
+<meta name="description" content="Browse 14 YouTube thumbnail templates — Dark Bold, Fire Storm, Gaming Neon, Gold Luxury, Cinematic and more. Free to preview, instant download.">
+<link rel="canonical" href="https://smuffinz99-prog.github.io/thumbly/thumbnail-templates.html">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --bg:#0d1117; --surface:#161b22; --border:#30363d; --text:#e6edf3; --muted:#8b949e; --accent:#f85149; --accent2:#ff6b35; --pro:#f0c040; --radius:10px; }
+body { background:var(--bg); color:var(--text); font:16px/1.6 system-ui,sans-serif; }
+nav { display:flex; align-items:center; justify-content:space-between; padding:16px 40px; background:var(--bg); border-bottom:1px solid var(--border); }
+.logo { font-size:20px; font-weight:900; text-decoration:none; color:var(--text); }
+.logo span { color:var(--accent); }
+.nav-cta { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; padding:8px 18px; border-radius:var(--radius); font-weight:700; font-size:13px; text-decoration:none; }
+.page { max-width:1200px; margin:0 auto; padding:60px 24px; }
+.page-header { text-align:center; margin-bottom:56px; }
+h1 { font-size:clamp(26px,4vw,42px); font-weight:900; margin-bottom:14px; }
+h1 span { color:var(--accent); }
+.sub { font-size:16px; color:var(--muted); }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
+.tpl-card { border-radius:12px; overflow:hidden; border:1px solid var(--border); background:var(--surface); cursor:pointer; transition:border-color .15s, transform .15s; }
+.tpl-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+.thumb-wrap { position:relative; aspect-ratio:16/9; }
+.thumb-wrap canvas { width:100%; height:100%; display:block; }
+.pro-badge { position:absolute; top:10px; right:10px; background:var(--pro); color:#000; font-size:11px; font-weight:700; padding:4px 10px; border-radius:100px; }
+.card-footer { padding:14px 16px; display:flex; align-items:center; justify-content:space-between; }
+.card-name { font-size:15px; font-weight:700; }
+.card-cta { font-size:12px; color:var(--accent); font-weight:700; }
+.cta-banner { background:linear-gradient(135deg,#2a0800,#1a0500); border:1px solid rgba(248,81,73,.3); border-radius:14px; padding:40px; text-align:center; margin:56px 0 0; }
+.cta-banner h2 { font-size:24px; font-weight:800; margin-bottom:10px; }
+.cta-banner p { font-size:15px; color:var(--muted); margin-bottom:22px; }
+.btn { display:inline-block; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; padding:13px 28px; border-radius:var(--radius); font-weight:700; font-size:15px; text-decoration:none; }
+footer { text-align:center; padding:40px 20px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; margin-top:60px; }
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html"><span>Thumb</span>ly</a>
+  <a class="nav-cta" href="app.html">Use a Template →</a>
+</nav>
+<div class="page">
+  <div class="page-header">
+    <h1>YouTube Thumbnail <span>Templates</span></h1>
+    <p class="sub">14 professionally designed templates built for click-through rate. Click any template to start editing.</p>
+  </div>
+  <div class="grid" id="template-grid"></div>
+  <div class="cta-banner">
+    <h2>All templates. No watermark. Unlimited downloads.</h2>
+    <p>Upgrade to Pro for <span data-price></span>/mo and unlock the full template library.</p>
+    <a class="btn" href="app.html">Start Making Thumbnails →</a>
+  </div>
+</div>
+<footer>© 2026 Thumbly — <a href="index.html" style="color:var(--muted)">Home</a></footer>
+<script src="templates.js"></script>
+<script src="pricing.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var grid = document.getElementById('template-grid');
+  window.TEMPLATES.forEach(function (tpl) {
+    var card = document.createElement('div');
+    card.className = 'tpl-card';
+    var wrap = document.createElement('div');
+    wrap.className = 'thumb-wrap';
+    var mc = document.createElement('canvas');
+    mc.width = 640; mc.height = 360;
+    wrap.appendChild(mc);
+    if (tpl.pro) {
+      var badge = document.createElement('div');
+      badge.className = 'pro-badge'; badge.textContent = 'PRO';
+      wrap.appendChild(badge);
+    }
+    card.appendChild(wrap);
+    var footer = document.createElement('div');
+    footer.className = 'card-footer';
+    footer.innerHTML = '<span class="card-name">' + tpl.name + '</span><span class="card-cta">' + (tpl.pro ? 'Pro template →' : 'Free →') + '</span>';
+    card.appendChild(footer);
+    card.addEventListener('click', function () { location.href = 'app.html'; });
+    grid.appendChild(card);
+    // Draw
+    var ctx = mc.getContext('2d');
+    var mW = 640, mH = 360, bg = tpl.bg;
+    if (bg.type === 'solid') { ctx.fillStyle = bg.color; ctx.fillRect(0,0,mW,mH); }
+    else {
+      var a = (bg.angle||135)*Math.PI/180;
+      var g = ctx.createLinearGradient(mW/2-Math.cos(a)*mW/2, mH/2-Math.sin(a)*mH/2, mW/2+Math.cos(a)*mW/2, mH/2+Math.sin(a)*mH/2);
+      g.addColorStop(0,bg.from); g.addColorStop(1,bg.to); ctx.fillStyle=g; ctx.fillRect(0,0,mW,mH);
+    }
+    ctx.fillStyle = tpl.titleColor||'#fff';
+    ctx.font = 'bold '+Math.round(mH*0.20)+'px Impact,Arial Black,sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.strokeStyle = tpl.strokeColor||'#000'; ctx.lineWidth = Math.round(mH*0.025); ctx.lineJoin='round';
+    ctx.strokeText('YOUR', mW/2, mH*0.38); ctx.fillText('YOUR', mW/2, mH*0.38);
+    ctx.strokeText('TITLE', mW/2, mH*0.64); ctx.fillText('TITLE', mW/2, mH*0.64);
+    ctx.strokeStyle=tpl.titleColor||'#fff'; ctx.globalAlpha=0.4; ctx.lineWidth=3;
+    ctx.strokeRect(8,8,mW-16,mH-16); ctx.globalAlpha=1;
+  });
+});
+</script>
+</body>
+</html>

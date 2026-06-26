@@ -1,0 +1,141 @@
+/* Thumbly — thumbnail theme definitions
+ * bg: { type:'solid', color } | { type:'gradient', from, to, angle }
+ * overlay (optional): pattern drawn over background
+ *   'speed-lines' | 'hex-grid' | 'circuit' | 'diagonal' | 'film-grain'
+ *   'gold-pattern' | 'wave-flow' | 'radiant' | 'geo-mesh' | 'sparks' | 'dot-grid'
+ */
+window.TEMPLATES = [
+  // ── Free ─────────────────────────────────────────────────────────────────────
+  {
+    id: 'dark-bold',
+    name: 'Dark Bold',
+    pro: false,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#0f172a', to: '#1e293b', angle: 160 },
+    titleColor: '#ffffff', subtitleColor: '#94a3b8', accentColor: '#f59e0b',
+    strokeColor: '#000000',
+  },
+  {
+    id: 'red-heat',
+    name: 'Red Heat',
+    pro: false,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#7f1d1d', to: '#dc2626', angle: 135 },
+    titleColor: '#ffffff', subtitleColor: '#fecaca', accentColor: '#fbbf24',
+    strokeColor: '#000000',
+  },
+
+  // ── Pro ───────────────────────────────────────────────────────────────────────
+  {
+    id: 'fire-storm',
+    name: 'Fire Storm',
+    pro: true,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#ff6b00', to: '#cc0000', angle: 135 },
+    titleColor: '#ffffff', subtitleColor: '#fff7ed', accentColor: '#ffd700',
+    strokeColor: '#7f1d1d', overlay: 'speed-lines',
+  },
+  {
+    id: 'gaming-neon',
+    name: 'Gaming Neon',
+    pro: true,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#0a0020', to: '#130040', angle: 135 },
+    titleColor: '#00f5ff', subtitleColor: '#a78bfa', accentColor: '#ff00ff',
+    strokeColor: '#000033', overlay: 'hex-grid',
+  },
+  {
+    id: 'tech-circuit',
+    name: 'Tech Circuit',
+    pro: true,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#020c18', to: '#061830', angle: 180 },
+    titleColor: '#60d4f0', subtitleColor: '#90b8d0', accentColor: '#00e5ff',
+    strokeColor: '#001020', overlay: 'circuit',
+  },
+  {
+    id: 'viral',
+    name: 'Viral',
+    pro: true,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#16a34a', to: '#84cc16', angle: 135 },
+    titleColor: '#ffffff', subtitleColor: '#ecfccb', accentColor: '#ffffff',
+    strokeColor: '#14532d', overlay: 'diagonal',
+  },
+  {
+    id: 'cinematic',
+    name: 'Cinematic',
+    pro: true,
+    font: "'Arial Black', sans-serif",
+    bg: { type: 'solid', color: '#060606' },
+    titleColor: '#f5f0e8', subtitleColor: '#a8a8a0', accentColor: '#e5c44e',
+    strokeColor: '#000000', overlay: 'film-grain',
+  },
+  {
+    id: 'gold-luxury',
+    name: 'Gold Luxury',
+    pro: true,
+    font: "Georgia, 'Times New Roman', serif",
+    bg: { type: 'gradient', from: '#0a0804', to: '#1e1608', angle: 135 },
+    titleColor: '#f0c84a', subtitleColor: '#c8a030', accentColor: '#f0c84a',
+    strokeColor: '#1a0a00', overlay: 'gold-pattern',
+  },
+  {
+    id: 'ocean-deep',
+    name: 'Ocean Deep',
+    pro: true,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#021018', to: '#042838', angle: 180 },
+    titleColor: '#80d8f8', subtitleColor: '#40b0d0', accentColor: '#00ffff',
+    strokeColor: '#001020', overlay: 'wave-flow',
+  },
+  {
+    id: 'sunset-burst',
+    name: 'Sunset Burst',
+    pro: true,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#f97316', to: '#db2777', angle: 120 },
+    titleColor: '#ffffff', subtitleColor: '#ffe4e6', accentColor: '#fef08a',
+    strokeColor: '#7c2d12', overlay: 'radiant',
+  },
+  {
+    id: 'minimal-geo',
+    name: 'Minimal Geo',
+    pro: true,
+    font: "'Arial Black', sans-serif",
+    bg: { type: 'solid', color: '#f1f5f9' },
+    titleColor: '#0f172a', subtitleColor: '#64748b', accentColor: '#2563eb',
+    strokeColor: '#e2e8f0', overlay: 'geo-mesh',
+  },
+  {
+    id: 'electric-blue',
+    name: 'Electric Blue',
+    pro: true,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#1d4ed8', to: '#0284c7', angle: 135 },
+    titleColor: '#ffffff', subtitleColor: '#dbeafe', accentColor: '#fbbf24',
+    strokeColor: '#1e3a8a', overlay: 'diagonal',
+  },
+  {
+    id: 'dark-spark',
+    name: 'Dark Spark',
+    pro: true,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'solid', color: '#050505' },
+    titleColor: '#ffd700', subtitleColor: '#c8a020', accentColor: '#ffd700',
+    strokeColor: '#000000', overlay: 'sparks',
+  },
+  {
+    id: 'royal-purple',
+    name: 'Royal Purple',
+    pro: true,
+    font: "Impact, 'Arial Black', sans-serif",
+    bg: { type: 'gradient', from: '#3b0764', to: '#6d28d9', angle: 135 },
+    titleColor: '#f3e8ff', subtitleColor: '#c084fc', accentColor: '#e879f9',
+    strokeColor: '#1e0038', overlay: 'dot-grid',
+  },
+];
+
+window.getTemplate = function (id) {
+  return window.TEMPLATES.find(function (t) { return t.id === id; }) || window.TEMPLATES[0];
+};
