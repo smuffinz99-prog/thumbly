@@ -4,7 +4,7 @@
 
   // ── Config ────────────────────────────────────────────────────────────────────
   var W = 1280, H = 720;
-  window.THUMBLY_PRO_URL = 'https://buy.stripe.com/test_8x2bJ012JaXAgzx6mZb3q01';
+  window.THUMBLY_PRO_URL = 'https://buy.stripe.com/8x2bJ012JaXAgzx6mZb3q01';
   var PRO_KEY    = 'thumbly.pro.v1';
   var EXPORT_KEY = 'thumbly.exports.v1';
   var FREE_DAILY = 3;
