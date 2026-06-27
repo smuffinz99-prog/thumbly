@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core pages -->
   <url><loc>https://smuffinz99-prog.github.io/thumbly/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://smuffinz99-prog.github.io/thumbly/app.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://smuffinz99-prog.github.io/thumbly/youtube-thumbnail-maker.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://smuffinz99-prog.github.io/thumbly/thumbnail-templates.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- High-value landing pages -->
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/youtube-thumbnail-maker.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/online-thumbnail-maker.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/best-youtube-thumbnail-maker.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/how-to-make-youtube-thumbnail.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/youtube-thumbnail-tips.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/youtube-thumbnail-ideas.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/youtube-thumbnail-font.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Templates and resources -->
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/thumbnail-templates.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://smuffinz99-prog.github.io/thumbly/free-thumbnail-templates.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://smuffinz99-prog.github.io/thumbly/thumbnail-size-guide.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Gaming niche -->
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/gaming-thumbnail-maker.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/minecraft-thumbnail.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/fortnite-thumbnail.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Content-type niches -->
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/tutorial-thumbnail-maker.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/vlog-thumbnail-maker.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/faceless-youtube-channel-thumbnail.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/youtube-shorts-thumbnail.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Lifestyle / topic niches -->
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/cooking-thumbnail-maker.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/fitness-thumbnail-maker.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://smuffinz99-prog.github.io/thumbly/music-youtube-thumbnail.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Competitor alternatives -->
   <url><loc>https://smuffinz99-prog.github.io/thumbly/canva-alternative.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://smuffinz99-prog.github.io/thumbly/adobe-express-alternative.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

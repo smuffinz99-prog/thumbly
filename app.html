@@ -4,304 +4,383 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Thumbly — YouTube Thumbnail Maker</title>
-<meta name="description" content="Create stunning YouTube thumbnails in seconds. Free templates, image upload, instant download.">
+<meta name="description" content="Create stunning YouTube thumbnails in seconds. 21 fonts, drag & drop text, 14 templates, custom backgrounds. Free to use.">
 <link rel="canonical" href="https://smuffinz99-prog.github.io/thumbly/app.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Righteous&family=Oswald:wght@700&family=Montserrat:wght@700;900&family=Barlow+Condensed:wght@700;900&family=Teko:wght@700&family=Russo+One&family=Bangers&family=Space+Grotesk:wght@700&family=Nunito:wght@700&family=Cinzel:wght@700&family=Graduate&family=Pacifico&family=Permanent+Marker&family=Fredoka+One&family=Cabin+Condensed:wght@700&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg:      #0d1117;
-    --surface: #161b22;
-    --border:  #30363d;
-    --text:    #e6edf3;
-    --muted:   #8b949e;
-    --accent:  #f85149;
-    --accent2: #ff6b35;
-    --pro:     #f0c040;
-    --radius:  8px;
-    --panel:   300px;
-  }
-  html, body { height: 100%; background: var(--bg); color: var(--text); font: 14px/1.5 system-ui, sans-serif; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#21262d;
+  --border:#30363d;--text:#e6edf3;--muted:#8b949e;
+  --accent:#f85149;--accent2:#ff6b35;--pro:#f0c040;
+  --blue:#58a6ff;--green:#3fb950;
+  --radius:8px;--panel:320px;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font:13px/1.5 system-ui,-apple-system,sans-serif}
 
-  /* ── Navbar ── */
-  .navbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 10;
-  }
-  .navbar .logo { font-size: 20px; font-weight: 800; color: var(--text); text-decoration: none; }
-  .navbar .logo span { color: var(--accent); }
-  .navbar .nav-right { display: flex; align-items: center; gap: 10px; }
-  .pro-badge { background: var(--pro); color: #000; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 100px; display: none; }
-  .upgrade-btn {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff; border: none; padding: 7px 16px; border-radius: var(--radius);
-    font-weight: 700; font-size: 13px; cursor: pointer;
-  }
+/* ── Navbar ── */
+.navbar{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:var(--surface);border-bottom:1px solid var(--border);position:relative;z-index:20;flex-shrink:0}
+.logo{font-size:18px;font-weight:800;color:var(--text);text-decoration:none}
+.logo span{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.pro-badge{background:var(--pro);color:#000;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;display:none}
+.upgrade-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:6px 14px;border-radius:var(--radius);font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap}
 
-  /* ── Editor layout ── */
-  .editor {
-    display: grid;
-    grid-template-columns: var(--panel) 1fr;
-    height: calc(100vh - 49px);
-    overflow: hidden;
-  }
+/* ── Layout ── */
+.shell{display:flex;flex-direction:column;height:100vh}
+.editor{display:grid;grid-template-columns:var(--panel) 1fr;flex:1;overflow:hidden;min-height:0}
 
-  /* ── Side panel ── */
-  .panel {
-    background: var(--surface); border-right: 1px solid var(--border);
-    overflow-y: auto; overflow-x: hidden;
-    display: flex; flex-direction: column; gap: 0;
-  }
-  .panel-section { border-bottom: 1px solid var(--border); }
-  .panel-section h3 {
-    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
-    color: var(--muted); padding: 12px 14px 8px;
-  }
+/* ── Panel ── */
+.panel{display:flex;flex-direction:column;background:var(--surface);border-right:1px solid var(--border);overflow:hidden;min-width:0}
 
-  /* Template picker */
-  #template-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 10px 12px; }
-  .tpl-card { position: relative; cursor: pointer; border-radius: 6px; overflow: hidden; border: 2px solid transparent; transition: border-color .15s; }
-  .tpl-card:hover { border-color: var(--muted); }
-  .tpl-card.active { border-color: var(--accent); }
-  .tpl-card.locked { opacity: .6; }
-  .tpl-card canvas { display: block; width: 100%; height: auto; border-radius: 4px; }
-  .tpl-card span { display: block; font-size: 10px; font-weight: 600; color: var(--muted); padding: 3px 4px 4px; text-align: center; }
-  .tpl-card.active span { color: var(--accent); }
+/* ── Tab bar ── */
+.tab-bar{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.tab-btn{flex:1;padding:10px 4px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font:600 11px/1 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:color .15s,border-color .15s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-  /* Inputs */
-  .field { padding: 6px 14px; }
-  .field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; font-weight: 600; }
-  .field input[type="text"], .field select {
-    width: 100%; padding: 7px 10px; background: var(--bg); border: 1px solid var(--border);
-    border-radius: var(--radius); color: var(--text); font-size: 13px; outline: none;
-  }
-  .field input[type="text"]:focus, .field select:focus { border-color: var(--accent); }
-  .field input[type="color"] { width: 40px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; background: transparent; padding: 2px; }
-  .color-row { display: flex; align-items: center; gap: 10px; }
+/* ── Tab panes ── */
+.tab-pane{flex:1;overflow-y:auto;overflow-x:hidden}
+.tab-pane.hidden{display:none}
+.tab-pane::-webkit-scrollbar{width:4px}
+.tab-pane::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
-  /* Image upload */
-  .upload-area {
-    margin: 6px 14px 10px; border: 1.5px dashed var(--border); border-radius: var(--radius);
-    padding: 14px 10px; text-align: center; cursor: pointer; transition: border-color .15s;
-  }
-  .upload-area:hover { border-color: var(--accent); }
-  .upload-area input[type="file"] { display: none; }
-  .upload-area p { font-size: 12px; color: var(--muted); }
-  .upload-area .upload-icon { font-size: 22px; margin-bottom: 4px; }
-  #remove-bg { display: none; font-size: 11px; color: var(--accent); cursor: pointer; background: none; border: none; padding: 0 14px 8px; text-align: left; }
+/* ── Section labels ── */
+.sec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:12px 14px 6px}
 
-  /* Pro lock section */
-  .pro-gate { padding: 10px 14px 12px; }
-  .pro-gate p { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-  .btn-full { display: block; width: 100%; text-align: center; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; padding: 9px; border-radius: var(--radius); font-weight: 700; font-size: 13px; cursor: pointer; }
+/* ── Template grid ── */
+.tpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px 12px 12px}
+.tpl-card{position:relative;cursor:pointer;border-radius:6px;overflow:hidden;border:2px solid transparent;transition:border-color .15s}
+.tpl-card:hover{border-color:var(--muted)}
+.tpl-card.active{border-color:var(--accent)}
+.tpl-card.locked{opacity:.6}
+.tpl-card canvas{display:block;width:100%;height:auto;border-radius:4px}
+.tpl-label{display:block;font-size:10px;font-weight:600;color:var(--muted);padding:3px 4px 4px;text-align:center}
+.tpl-card.active .tpl-label{color:var(--accent)}
 
-  /* ── Canvas area ── */
-  .canvas-area {
-    background: #060a0f; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 16px; padding: 24px;
-    overflow: auto;
-  }
-  .canvas-wrap { position: relative; width: 100%; max-width: 854px; }
-  #thumb {
-    display: block; width: 100%; height: auto;
-    border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,0.7);
-  }
-  .canvas-toolbar {
-    display: flex; align-items: center; justify-content: space-between;
-    width: 100%; max-width: 854px; gap: 12px;
-  }
-  #export-info { font-size: 12px; color: var(--muted); }
-  #export-btn {
-    background: linear-gradient(135deg, #16a34a, #15803d);
-    color: #fff; border: none; padding: 10px 24px; border-radius: var(--radius);
-    font-weight: 700; font-size: 14px; cursor: pointer;
-    display: flex; align-items: center; gap: 7px;
-  }
-  #export-btn:hover { opacity: .9; }
+/* ── Font grid ── */
+.font-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px 12px 10px}
+.font-btn{position:relative;border:2px solid var(--border);background:var(--bg);color:var(--text);border-radius:6px;padding:9px 6px;cursor:pointer;font-size:15px;line-height:1.1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:border-color .15s,background .15s}
+.font-btn:hover{border-color:var(--blue)}
+.font-btn.active{border-color:var(--accent);background:rgba(248,81,73,.1)}
+.font-btn.font-locked{opacity:.55}
+.font-lock-badge{position:absolute;top:2px;right:3px;font-size:9px;line-height:1;pointer-events:none}
 
-  /* ── Upgrade bar ── */
-  #upgrade-bar {
-    background: linear-gradient(90deg, #1a0a00, #2a1000);
-    border-top: 1px solid #7a3a00; padding: 10px 20px;
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    font-size: 13px;
-  }
-  #upgrade-bar p { color: #fbbf24; }
-  #upgrade-bar p span { color: var(--muted); }
-  #upgrade-bar .upgrade-btn { flex-shrink: 0; }
+/* ── Element tabs ── */
+.el-tabs{display:flex;gap:4px;padding:8px 12px 6px;flex-wrap:wrap}
+.el-tab{border:1.5px solid var(--border);background:var(--bg);color:var(--muted);border-radius:6px;padding:5px 11px;cursor:pointer;font-size:11px;font-weight:600;transition:all .15s}
+.el-tab:hover{border-color:var(--blue);color:var(--text)}
+.el-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(248,81,73,.1)}
 
-  /* ── Upgrade modal ── */
-  #upgrade-modal {
-    display: none; position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,0.75); align-items: center; justify-content: center;
-  }
-  .modal-box {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-    padding: 36px; max-width: 420px; width: 90%; text-align: center; position: relative;
-  }
-  .modal-box .modal-icon { font-size: 42px; margin-bottom: 12px; }
-  .modal-box h2 { font-size: 22px; margin-bottom: 8px; }
-  .modal-box p { color: var(--muted); font-size: 14px; margin-bottom: 22px; line-height: 1.6; }
-  .modal-box ul { text-align: left; margin: 0 0 24px; padding: 0 0 0 18px; color: var(--muted); font-size: 13px; line-height: 2; }
-  .modal-box ul li strong { color: var(--text); }
-  .modal-price { font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 20px; }
-  .modal-price span { font-size: 14px; color: var(--muted); font-weight: 400; }
-  #checkout-btn {
-    display: block; width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #fff; border: none; padding: 14px; border-radius: var(--radius);
-    font-weight: 800; font-size: 16px; cursor: pointer; margin-bottom: 10px;
-  }
-  .modal-fine { font-size: 11px; color: var(--muted); }
-  #modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer; }
+/* ── Fields ── */
+.field{padding:4px 12px}
+.field label{display:block;font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.field input[type="text"]{width:100%;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:13px;outline:none}
+.field input[type="text"]:focus{border-color:var(--accent)}
+.field input[type="range"]{width:100%;accent-color:var(--accent);cursor:pointer;vertical-align:middle}
+.field input[type="color"]{width:38px;height:30px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:none;padding:2px;vertical-align:middle}
+.field input[type="checkbox"]{cursor:pointer;width:15px;height:15px;accent-color:var(--accent);vertical-align:middle}
+.size-row{display:flex;align-items:center;gap:8px}
+.size-val{font-size:12px;color:var(--muted);min-width:26px;text-align:right;flex-shrink:0}
+.align-btns{display:flex;gap:4px}
+.align-btn{border:1.5px solid var(--border);background:var(--bg);color:var(--muted);border-radius:6px;padding:5px 12px;cursor:pointer;font-size:12px;font-weight:600;transition:all .15s;white-space:nowrap}
+.align-btn:hover{border-color:var(--blue)}
+.align-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(248,81,73,.1)}
+.check-row{display:flex;align-items:center;gap:8px;padding:5px 12px 8px}
+.check-row label{font-size:12px;color:var(--muted);cursor:pointer}
+.color-row{display:flex;align-items:center;gap:8px}
+.color-hex{font-size:11px;color:var(--muted)}
 
-  /* ── Pro toast ── */
-  #pro-toast {
-    display: none; position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 200;
-    background: #16a34a; color: #fff; padding: 12px 24px; border-radius: 100px;
-    font-weight: 700; font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    align-items: center; gap: 8px;
-  }
+/* ── BG mode buttons ── */
+.bg-mode-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;padding:6px 12px 10px}
+.bg-mode-btn{border:1.5px solid var(--border);background:var(--bg);color:var(--muted);border-radius:6px;padding:6px 2px;cursor:pointer;font-size:10px;font-weight:600;text-align:center;transition:all .15s;white-space:nowrap}
+.bg-mode-btn:hover{border-color:var(--blue)}
+.bg-mode-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(248,81,73,.1)}
+.lock-icon{font-size:9px}
 
-  /* ── Mobile ── */
-  @media (max-width: 680px) {
-    .editor { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; overflow: visible; }
-    .panel { max-height: 420px; }
-  }
+/* ── Upload area ── */
+.upload-area{display:block;margin:4px 12px 4px;border:1.5px dashed var(--border);border-radius:var(--radius);padding:16px 10px;text-align:center;cursor:pointer;transition:border-color .15s}
+.upload-area:hover{border-color:var(--accent)}
+.upload-area input[type="file"]{display:none}
+.upload-area p{font-size:11px;color:var(--muted);margin-top:4px}
+.upload-icon{font-size:22px}
+#remove-bg{display:none;background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;padding:0 12px 8px;text-align:left}
+
+/* ── Divider ── */
+.divider{height:1px;background:var(--border);margin:6px 0}
+
+/* ── Pro gate ── */
+.pro-gate{padding:12px 14px}
+.pro-gate p{font-size:11px;color:var(--muted);margin-bottom:9px;line-height:1.6}
+.btn-full{display:block;width:100%;text-align:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:9px;border-radius:var(--radius);font-weight:700;font-size:12px;cursor:pointer}
+
+/* ── Spacer ── */
+.panel-spacer{height:24px;flex-shrink:0}
+
+/* ── Canvas area ── */
+.canvas-area{background:#080c11;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:18px;overflow:hidden;position:relative}
+.canvas-wrap{position:relative;width:100%;max-width:910px}
+#thumb{display:block;width:100%;height:auto;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.7);cursor:default}
+.canvas-toolbar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:910px;gap:12px}
+#export-info{font-size:12px;color:var(--muted)}
+#export-btn{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;padding:10px 22px;border-radius:var(--radius);font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px}
+#export-btn:hover{opacity:.9}
+.canvas-hint{font-size:11px;color:#4a5568;text-align:center}
+
+/* ── Upgrade bar ── */
+#upgrade-bar{background:linear-gradient(90deg,#1a0a00,#2a1000);border-top:1px solid #7a3a00;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+#upgrade-bar p{color:#fbbf24;font-size:12px}
+#upgrade-bar p span{color:var(--muted)}
+
+/* ── Modal ── */
+#upgrade-modal{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.8);align-items:center;justify-content:center}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 32px;max-width:440px;width:92%;text-align:center;position:relative}
+.modal-icon{font-size:44px;margin-bottom:10px}
+.modal-box h2{font-size:22px;font-weight:800;margin-bottom:8px}
+.modal-box>p{color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.6}
+.modal-box ul{text-align:left;margin:0 0 20px;padding:0 0 0 16px}
+.modal-box ul li{color:var(--muted);font-size:13px;line-height:2.1}
+.modal-box ul li strong{color:var(--text)}
+.modal-price{font-size:30px;font-weight:800;color:var(--text);margin-bottom:18px}
+.modal-price small{font-size:14px;color:var(--muted);font-weight:400}
+#checkout-btn{display:block;width:100%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:14px;border-radius:var(--radius);font-weight:800;font-size:16px;cursor:pointer;margin-bottom:10px}
+.modal-fine{font-size:11px;color:var(--muted)}
+#modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1}
+
+/* ── Toast ── */
+#pro-toast{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;background:#16a34a;color:#fff;padding:12px 24px;border-radius:100px;font-weight:700;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.4);align-items:center;gap:8px;white-space:nowrap}
+
+/* ── Opts panels ── */
+.opts-panel.hidden{display:none}
+
+/* ── Mobile ── */
+@media(max-width:700px){
+  :root{--panel:100%}
+  .editor{grid-template-columns:1fr;grid-template-rows:auto 1fr;overflow:visible}
+  html,body{height:auto;overflow:auto}
+  .shell{height:auto}
+  .panel{max-height:55vh}
+  .canvas-area{min-height:56vw;justify-content:flex-start;padding-top:12px}
+}
 </style>
 </head>
 <body>
+<div class="shell">
 
 <!-- Navbar -->
 <nav class="navbar">
   <a class="logo" href="index.html"><span>Thumb</span>ly</a>
   <div class="nav-right">
     <span class="pro-badge" id="pro-badge">PRO</span>
-    <button class="upgrade-btn">Upgrade to Pro</button>
+    <button class="upgrade-btn" id="nav-upgrade-btn">⚡ Upgrade to Pro</button>
   </div>
 </nav>
 
 <div class="editor">
-  <!-- Side panel -->
+
+  <!-- ── Side panel ── -->
   <aside class="panel">
-
-    <div class="panel-section">
-      <h3>Template</h3>
-      <div id="template-picker"></div>
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="design">Design</button>
+      <button class="tab-btn" data-tab="text">Text</button>
+      <button class="tab-btn" data-tab="background">Background</button>
     </div>
 
-    <div class="panel-section">
-      <h3>Title</h3>
-      <div class="field">
-        <label>Line 1 (big)</label>
-        <input type="text" id="title-line1" placeholder="YOUR BIG" maxlength="40">
+    <!-- Design tab -->
+    <div class="tab-pane" id="tab-design">
+      <div class="sec-label">Template</div>
+      <div class="tpl-grid" id="template-picker"></div>
+      <div class="free-only">
+        <div class="divider"></div>
+        <div class="pro-gate">
+          <p>🔒 Unlock 12 premium templates, 15 extra fonts, custom solid &amp; gradient backgrounds, unlimited exports and no watermark.</p>
+          <button class="btn-full upgrade-btn">Upgrade to Pro — <span data-price></span>/mo</button>
+        </div>
       </div>
-      <div class="field">
-        <label>Line 2</label>
-        <input type="text" id="title-line2" placeholder="TITLE HERE" maxlength="40">
-      </div>
-      <div class="field">
-        <label>Subtitle (small)</label>
-        <input type="text" id="subtitle" placeholder="Optional subtitle..." maxlength="60">
-      </div>
+      <div class="panel-spacer"></div>
     </div>
 
-    <div class="panel-section">
-      <h3>Layout</h3>
+    <!-- Text tab -->
+    <div class="tab-pane hidden" id="tab-text">
+      <div class="sec-label">Select element to edit</div>
+      <div class="el-tabs" id="element-tabs"></div>
+      <div class="divider"></div>
+
+      <div class="field" style="padding-top:8px">
+        <label>Text</label>
+        <input type="text" id="el-text" placeholder="Type your text..." maxlength="60">
+      </div>
+
+      <div class="sec-label">Font <span id="font-pro-hint" style="color:var(--pro);font-size:9px;font-weight:700;display:none">🔒 PRO</span></div>
+      <div class="font-grid" id="font-grid"></div>
+
       <div class="field">
-        <label>Text position</label>
-        <select id="text-position">
-          <option value="bottom">Bottom (recommended)</option>
-          <option value="center">Center</option>
-          <option value="top">Top</option>
-        </select>
+        <label>Size</label>
+        <div class="size-row">
+          <input type="range" id="el-size" min="12" max="280" step="2" value="140">
+          <span class="size-val" id="el-size-val">140</span>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <input type="checkbox" id="el-bold" checked>
+        <label for="el-bold">Bold</label>
+      </div>
+
+      <div class="field">
+        <label>Align</label>
+        <div class="align-btns">
+          <button class="align-btn" data-align="left">Left</button>
+          <button class="align-btn active" data-align="center">Center</button>
+          <button class="align-btn" data-align="right">Right</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Text color</label>
+        <div class="color-row">
+          <input type="color" id="el-color" value="#ffffff">
+          <span class="color-hex" id="el-color-hex">#ffffff</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Outline</label>
+        <div class="color-row">
+          <input type="color" id="el-stroke" value="#000000">
+          <input type="checkbox" id="el-stroke-on" checked style="margin-left:4px">
+          <label for="el-stroke-on" style="font-size:11px;color:var(--muted);cursor:pointer">Enable outline</label>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <input type="checkbox" id="el-visible" checked>
+        <label for="el-visible">Show this element</label>
+      </div>
+
+      <div class="divider"></div>
+      <div class="sec-label">Badge &amp; Channel</div>
+
+      <div class="field">
+        <label>Badge text (e.g. #1, TOP 10)</label>
+        <input type="text" id="badge-text" placeholder="Leave empty for none" maxlength="20">
       </div>
       <div class="field">
-        <label>Badge label (e.g. TOP 10)</label>
-        <input type="text" id="badge-text" placeholder="Leave empty for no badge" maxlength="20">
+        <label>Badge color</label>
+        <input type="color" id="badge-color" value="#f59e0b">
       </div>
-      <div class="field">
+      <div class="field" style="padding-bottom:12px">
         <label>Channel name</label>
         <input type="text" id="channel-name" placeholder="@yourchannel" maxlength="40">
       </div>
+      <div class="panel-spacer"></div>
     </div>
 
-    <div class="panel-section">
-      <h3>Background photo</h3>
-      <label class="upload-area" for="bg-upload">
-        <input type="file" id="bg-upload" accept="image/*">
-        <div class="upload-icon">📸</div>
-        <p>Click to upload photo<br><small>JPG, PNG, WEBP</small></p>
-      </label>
-      <button id="remove-bg">✕ Remove photo</button>
-    </div>
+    <!-- Background tab -->
+    <div class="tab-pane hidden" id="tab-background">
+      <div class="sec-label">Background mode</div>
+      <div class="bg-mode-row">
+        <button class="bg-mode-btn active" data-bgmode="template">Template</button>
+        <button class="bg-mode-btn" data-bgmode="solid">Solid <span class="lock-icon" id="solid-lock">🔒</span></button>
+        <button class="bg-mode-btn" data-bgmode="gradient">Gradient <span class="lock-icon" id="grad-lock">🔒</span></button>
+        <button class="bg-mode-btn" data-bgmode="photo">Photo</button>
+      </div>
 
-    <div class="panel-section pro-only" style="display:none">
-      <h3>Colors <span style="color:var(--pro);font-size:10px;font-weight:700">PRO</span></h3>
-      <div class="field">
-        <label>Title color</label>
-        <div class="color-row">
-          <input type="color" id="title-color" value="#ffffff">
-          <span style="font-size:12px;color:var(--muted)">Override template title color</span>
+      <!-- Solid -->
+      <div class="opts-panel hidden" id="bg-solid-opts">
+        <div class="field">
+          <label>Color</label>
+          <input type="color" id="bg-solid-color" value="#0f172a">
         </div>
       </div>
-      <div class="field" style="padding-bottom:12px">
-        <label>Accent / badge color</label>
-        <div class="color-row">
-          <input type="color" id="accent-color" value="#f59e0b">
-          <span style="font-size:12px;color:var(--muted)">Override badge & accent color</span>
+
+      <!-- Gradient -->
+      <div class="opts-panel hidden" id="bg-gradient-opts">
+        <div class="field">
+          <label>From color</label>
+          <input type="color" id="bg-from-color" value="#0f172a">
+        </div>
+        <div class="field">
+          <label>To color</label>
+          <input type="color" id="bg-to-color" value="#1e293b">
+        </div>
+        <div class="field">
+          <label>Angle: <span id="bg-angle-val">135</span>°</label>
+          <input type="range" id="bg-angle" min="0" max="360" value="135">
         </div>
       </div>
-    </div>
 
-    <div class="panel-section free-only">
-      <div class="pro-gate">
-        <p>🔒 Unlock 12 more templates, remove the watermark, and get color control.</p>
-        <button class="btn-full upgrade-btn">Upgrade to Pro — <span data-price></span></button>
+      <!-- Photo -->
+      <div class="opts-panel hidden" id="bg-photo-opts">
+        <label class="upload-area" for="bg-upload">
+          <input type="file" id="bg-upload" accept="image/*">
+          <div class="upload-icon">📸</div>
+          <p>Click to upload photo<br><small>JPG, PNG, WEBP</small></p>
+        </label>
+        <button id="remove-bg">✕ Remove photo</button>
+        <div class="field">
+          <label>Dark overlay: <span id="overlay-opacity-val">50</span>%</label>
+          <input type="range" id="overlay-opacity" min="0" max="90" value="50">
+        </div>
       </div>
-    </div>
 
+      <div class="divider"></div>
+      <div class="sec-label">Pattern overlay</div>
+      <div class="check-row">
+        <input type="checkbox" id="show-overlay" checked>
+        <label for="show-overlay">Show pattern overlay on background</label>
+      </div>
+      <div class="panel-spacer"></div>
+    </div>
   </aside>
 
-  <!-- Canvas area -->
+  <!-- ── Canvas area ── -->
   <main class="canvas-area">
     <div class="canvas-wrap">
       <canvas id="thumb" width="1280" height="720"></canvas>
     </div>
     <div class="canvas-toolbar">
-      <span id="export-info">3 free exports left today</span>
+      <span id="export-info">1 free export left today</span>
       <button id="export-btn">⬇ Download Thumbnail</button>
     </div>
+    <p class="canvas-hint">Click text to select · Drag to reposition</p>
   </main>
+
+</div><!-- /editor -->
+
+<!-- Upgrade bar -->
+<div id="upgrade-bar" class="free-only">
+  <p>Free plan — <span>watermark visible on exports</span></p>
+  <button class="upgrade-btn" id="bar-upgrade-btn">Remove watermark — <span data-price></span>/mo</button>
 </div>
 
-<!-- Upgrade bar (free users) -->
-<div id="upgrade-bar" class="free-only">
-  <p>You're on the free plan. <span>Watermark visible on downloads.</span></p>
-  <button class="upgrade-btn">Remove watermark — <span data-price></span></button>
-</div>
+</div><!-- /shell -->
 
 <!-- Upgrade modal -->
 <div id="upgrade-modal">
   <div class="modal-box">
-    <button id="modal-close" aria-label="Close">×</button>
+    <button id="modal-close">×</button>
     <div class="modal-icon">⚡</div>
     <h2>Upgrade to Thumbly Pro</h2>
     <p>Everything you need to make thumbnails that actually get clicked.</p>
     <ul>
       <li><strong>No watermark</strong> — clean professional exports</li>
-      <li><strong>12 premium templates</strong> — Fire Storm, Gaming Neon, Gold Luxury &amp; more</li>
-      <li><strong>Custom colors</strong> — override title &amp; accent colors</li>
+      <li><strong>14 premium templates</strong> — Fire Storm, Gaming Neon, Gold Luxury &amp; more</li>
+      <li><strong>21 fonts</strong> — Montserrat, Bangers, Cinzel, Press Start &amp; 11 more</li>
+      <li><strong>Custom backgrounds</strong> — solid colors &amp; gradients</li>
       <li><strong>Unlimited exports</strong> — no daily limit</li>
       <li><strong>1280×720 HD PNG</strong> — full YouTube resolution</li>
     </ul>
-    <div class="modal-price"><span data-price></span> <span>/ month</span></div>
+    <div class="modal-price"><span data-price></span><small>/month</small></div>
     <button id="checkout-btn">Get Thumbly Pro →</button>
-    <div class="modal-fine">Cancel anytime. Instant access after payment.</div>
+    <div class="modal-fine">Cancel anytime · Instant access after payment</div>
   </div>
 </div>
 
-<!-- Pro success toast -->
-<div id="pro-toast">🎉 Welcome to Thumbly Pro! Watermark removed.</div>
+<!-- Toast -->
+<div id="pro-toast">🎉 Welcome to Thumbly Pro!</div>
 
 <script src="templates.js"></script>
 <script src="pricing.js"></script>
