@@ -317,9 +317,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
         <label class="upload-area" for="bg-upload">
           <input type="file" id="bg-upload" accept="image/*">
           <div class="upload-icon">📸</div>
-          <p>Click to upload photo<br><small>JPG, PNG, WEBP</small></p>
+          <p>Click to upload photo<br><small>JPG, PNG, WEBP — or drag &amp; drop</small></p>
         </label>
         <button id="remove-bg">✕ Remove photo</button>
+        <p style="font-size:12px;color:#8b949e;margin:6px 0 12px;text-align:center;">💡 Drag photo on canvas to reposition</p>
+        <div class="field">
+          <label>Zoom: <span id="photo-zoom-val">100</span>%</label>
+          <input type="range" id="photo-zoom" min="50" max="300" value="100">
+        </div>
         <div class="field">
           <label>Dark overlay: <span id="overlay-opacity-val">50</span>%</label>
           <input type="range" id="overlay-opacity" min="0" max="90" value="50">

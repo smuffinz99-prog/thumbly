@@ -237,7 +237,7 @@
     <a class="btn-primary" href="app.html">Create Free Thumbnail →</a>
     <a class="btn-secondary" href="#pricing">See Pro Plans</a>
   </div>
-  <p class="hero-note">No account needed · 3 free exports/day · Works in any browser</p>
+  <p class="hero-note">No account needed · 1 free export/day · Upload your own photos · Works in any browser</p>
 </section>
 
 <!-- Template preview grid -->
@@ -260,15 +260,25 @@
         <h3>Ready in 60 seconds</h3>
         <p>Pick a template, type your title, download. No design experience required — the hard work is done for you.</p>
       </div>
-      <div class="feat-card">
+      <div class="feat-card" style="border-color: var(--accent); background: linear-gradient(135deg, rgba(248,81,73,.07), var(--bg));">
         <div class="feat-icon">📸</div>
-        <h3>Upload your own photo</h3>
-        <p>Use your face or any image as the background. Thumbly blends it with the template overlay for a polished look.</p>
+        <h3>Upload &amp; drag your own photo</h3>
+        <p>Drop any photo as the background. Then <strong style="color:var(--text)">drag it to reposition</strong> and zoom to frame it perfectly. Your face, your gameplay, your product — exactly how you want it.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">↕️</div>
+        <h3>Drag &amp; resize text anywhere</h3>
+        <p>Click any text element and drag it anywhere on the canvas. Resize with the size slider. Full creative control — no fixed layouts.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔤</div>
+        <h3>21 pro fonts, visually previewed</h3>
+        <p>Each font is shown in its own typeface so you know exactly what you're picking. Impact, Bebas Neue, Bangers, Montserrat, Cinzel, and 16 more.</p>
       </div>
       <div class="feat-card">
         <div class="feat-icon">🎨</div>
         <h3>14 click-worthy templates</h3>
-        <p>Fire Storm, Gaming Neon, Cinematic, Gold Luxury and more — every template is built to maximise click-through rate.</p>
+        <p>Fire Storm, Gaming Neon, Cinematic, Gold Luxury and more — every template is purpose-built to maximise click-through rate.</p>
       </div>
       <div class="feat-card">
         <div class="feat-icon">📐</div>
@@ -279,11 +289,6 @@
         <div class="feat-icon">🔒</div>
         <h3>Your files stay private</h3>
         <p>Everything runs in your browser. Photos are never uploaded to a server. 100% private, 100% offline-capable.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">📱</div>
-        <h3>Works on any device</h3>
-        <p>Desktop, tablet, mobile — Thumbly works wherever you are. No app to install, no updates to wait for.</p>
       </div>
     </div>
   </div>
@@ -443,43 +448,112 @@
 <script src="pricing.js"></script>
 <script>
 (function () {
-  var W = 1280, H = 720;
 
-  // ── Render mini preview grid ──────────────────────────────────────────────────
-  function hex2rgb(h){ var v=h.replace('#',''); return [parseInt(v.slice(0,2),16),parseInt(v.slice(2,4),16),parseInt(v.slice(4,6),16)]; }
+  /* per-template niche-appropriate sample text + style hints */
+  var SAMPLE = {
+    'dark-bold':     { l1:'YOUR BIG',    l2:'TITLE HERE', bold:true  },
+    'red-heat':      { l1:'NEVER',       l2:'GIVE UP',    bold:true  },
+    'fire-storm':    { l1:'30 BOMB',     l2:'SOLO WIN',   bold:true  },
+    'gaming-neon':   { l1:'NEW META',    l2:'DROPS NOW',  bold:true  },
+    'tech-circuit':  { l1:'RANKED',      l2:'UNLOCKED',   bold:true  },
+    'viral':         { l1:'I MADE',      l2:'$10,000',    bold:true  },
+    'cinematic':     { l1:'THE REAL',    l2:'TRUTH',      bold:false },
+    'gold-luxury':   { l1:"RICH MAN'S",  l2:'GUIDE',      bold:false },
+    'ocean-deep':    { l1:'DEEP DIVE',   l2:'UNLOCKED',   bold:true  },
+    'sunset-burst':  { l1:'100 DAYS',    l2:'CHALLENGE',  bold:true  },
+    'minimal-geo':   { l1:'CLEAN',       l2:'DESIGN',     bold:false },
+    'electric-blue': { l1:'EPIC',        l2:'COMEBACK',   bold:true  },
+    'dark-spark':    { l1:'GOING',       l2:'VIRAL',      bold:true  },
+    'royal-purple':  { l1:'MYSTERY',     l2:'REVEALED',   bold:true  },
+  };
 
   function drawMini(mc, tpl) {
     var mW = mc.width, mH = mc.height;
     var ctx = mc.getContext('2d');
     var bg = tpl.bg;
+
+    /* Background */
     if (bg.type === 'solid') {
-      ctx.fillStyle = bg.color; ctx.fillRect(0, 0, mW, mH);
+      ctx.fillStyle = bg.color; ctx.fillRect(0,0,mW,mH);
     } else {
       var a = (bg.angle||135)*Math.PI/180;
-      var g = ctx.createLinearGradient(mW/2-Math.cos(a)*mW/2, mH/2-Math.sin(a)*mH/2, mW/2+Math.cos(a)*mW/2, mH/2+Math.sin(a)*mH/2);
+      var g = ctx.createLinearGradient(
+        mW/2-Math.cos(a)*mW/2, mH/2-Math.sin(a)*mH/2,
+        mW/2+Math.cos(a)*mW/2, mH/2+Math.sin(a)*mH/2);
       g.addColorStop(0, bg.from); g.addColorStop(1, bg.to);
-      ctx.fillStyle = g; ctx.fillRect(0, 0, mW, mH);
+      ctx.fillStyle = g; ctx.fillRect(0,0,mW,mH);
     }
-    // Simple text overlay
+
+    /* Subtle overlay hint for templates that have one */
+    if (tpl.overlay) {
+      ctx.save();
+      ctx.globalAlpha = 0.09;
+      ctx.strokeStyle = tpl.titleColor || '#fff';
+      ctx.lineWidth = 1;
+      if (tpl.overlay === 'speed-lines') {
+        for (var i=0;i<24;i++){var y=mH*i/24;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(mW,y+mH/8);ctx.stroke();}
+      } else if (tpl.overlay === 'hex-grid' || tpl.overlay === 'circuit' || tpl.overlay === 'dot-grid') {
+        for(var xi=0;xi<mW;xi+=22){for(var yi=0;yi<mH;yi+=22){ctx.beginPath();ctx.arc(xi,yi,2,0,6.28);ctx.fillStyle=tpl.titleColor||'#fff';ctx.fill();}}
+      } else if (tpl.overlay === 'diagonal') {
+        for(var di=-mH;di<mW+mH;di+=20){ctx.beginPath();ctx.moveTo(di,0);ctx.lineTo(di+mH,mH);ctx.stroke();}
+      } else if (tpl.overlay === 'gold-pattern') {
+        for(var gi=0;gi<mW;gi+=18){ctx.beginPath();ctx.moveTo(gi,0);ctx.lineTo(gi,mH);ctx.stroke();}
+        for(var gj=0;gj<mH;gj+=18){ctx.beginPath();ctx.moveTo(0,gj);ctx.lineTo(mW,gj);ctx.stroke();}
+      } else {
+        for(var ri=0;ri<mW;ri+=16){ctx.beginPath();ctx.moveTo(ri,0);ctx.lineTo(ri,mH);ctx.stroke();}
+      }
+      ctx.restore();
+    }
+
+    /* Bottom scrim so name label is always readable */
+    var scrim = ctx.createLinearGradient(0, mH*0.72, 0, mH);
+    scrim.addColorStop(0,'rgba(0,0,0,0)');
+    scrim.addColorStop(1,'rgba(0,0,0,0.65)');
+    ctx.fillStyle = scrim; ctx.fillRect(0,0,mW,mH);
+
+    /* Sample text */
+    var s = SAMPLE[tpl.id] || {l1:'YOUR', l2:'TITLE', bold:true};
+    var font = tpl.font || "Impact,'Arial Black',sans-serif";
+    var weight = s.bold ? 'bold ' : '';
+
+    /* Line 1 */
+    var sz1 = Math.round(mH * 0.235);
+    ctx.font = weight + sz1 + 'px ' + font;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = Math.round(mH * 0.032);
+    ctx.strokeStyle = tpl.strokeColor || 'rgba(0,0,0,0.9)';
+    var y1 = mH * 0.44;
+    ctx.strokeText(s.l1, mW/2, y1);
     ctx.fillStyle = tpl.titleColor || '#fff';
-    ctx.font = 'bold ' + Math.round(mH * 0.22) + 'px Impact, Arial Black, sans-serif';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.strokeStyle = tpl.strokeColor || '#000';
-    ctx.lineWidth = Math.round(mH * 0.028); ctx.lineJoin = 'round';
-    ctx.strokeText('YOUR', mW/2, mH * 0.38);
-    ctx.fillText('YOUR', mW/2, mH * 0.38);
-    ctx.strokeText('TITLE', mW/2, mH * 0.64);
-    ctx.fillText('TITLE', mW/2, mH * 0.64);
-    // Border
-    ctx.strokeStyle = tpl.titleColor || '#fff'; ctx.globalAlpha = 0.45; ctx.lineWidth = 3;
-    ctx.strokeRect(8, 8, mW-16, mH-16);
+    ctx.fillText(s.l1, mW/2, y1);
+
+    /* Line 2 — accent color */
+    var sz2 = Math.round(mH * 0.195);
+    ctx.font = weight + sz2 + 'px ' + font;
+    ctx.lineWidth = Math.round(mH * 0.027);
+    var y2 = mH * 0.68;
+    ctx.strokeText(s.l2, mW/2, y2);
+    ctx.fillStyle = tpl.accentColor || tpl.titleColor || '#fff';
+    ctx.fillText(s.l2, mW/2, y2);
+
+    /* Template name at bottom */
+    ctx.font = '700 ' + Math.round(mH*0.075) + 'px system-ui,sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.strokeStyle = 'rgba(0,0,0,0.7)';
+    ctx.lineWidth = 3;
+    ctx.strokeText(tpl.name, mW/2, mH - 10);
+    ctx.fillText(tpl.name, mW/2, mH - 10);
+
+    /* Subtle border */
+    ctx.strokeStyle = (tpl.titleColor||'#fff'); ctx.globalAlpha = 0.2; ctx.lineWidth = 2;
+    ctx.strokeRect(4,4,mW-8,mH-8);
     ctx.globalAlpha = 1;
   }
 
   function buildGrid() {
     var grid = document.getElementById('preview-grid'); if (!grid) return;
-    var show = window.TEMPLATES.slice(0, 8);
-    show.forEach(function (tpl) {
+    window.TEMPLATES.forEach(function (tpl) {
       var card = document.createElement('div');
       card.className = 'thumb-card';
       var mc = document.createElement('canvas');
@@ -490,25 +564,28 @@
         var pill = document.createElement('div');
         pill.className = 'pro-pill'; pill.textContent = 'PRO';
         card.appendChild(pill);
+      } else {
+        var free = document.createElement('div');
+        free.className = 'pro-pill';
+        free.style.cssText = 'background:#3fb950;color:#fff;';
+        free.textContent = 'FREE';
+        card.appendChild(free);
       }
+      card.title = 'Click to use the ' + tpl.name + ' template';
       card.addEventListener('click', function () { location.href = 'app.html'; });
       grid.appendChild(card);
     });
   }
 
-  // ── Pricing CTA ───────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', function () {
     buildGrid();
     var btn = document.getElementById('pricing-cta');
     if (btn) btn.addEventListener('click', function () {
       window.THUMBLY_CHECKOUT && window.THUMBLY_CHECKOUT();
     });
-
-    // FAQ accordion
     document.querySelectorAll('.faq-q').forEach(function (q) {
       q.addEventListener('click', function () {
-        var item = q.parentElement;
-        item.classList.toggle('open');
+        q.parentElement.classList.toggle('open');
       });
     });
   });

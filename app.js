@@ -18,14 +18,14 @@
     { id:'bebas',       name:'Bebas Neue',     css:"'Bebas Neue',Impact,sans-serif",        pro:false },
     { id:'righteous',   name:'Righteous',      css:"'Righteous',Impact,sans-serif",         pro:false },
     // Pro (15)
-    { id:'oswald',      name:'Oswald',         css:"'Oswald',Impact,sans-serif",            pro:true },
-    { id:'montserrat',  name:'Montserrat',     css:"'Montserrat',sans-serif",               pro:true },
+    { id:'oswald',      name:'Oswald',         css:"'Oswald',Impact,sans-serif",            pro:false },
+    { id:'montserrat',  name:'Montserrat',     css:"'Montserrat',sans-serif",               pro:false },
     { id:'barlow',      name:'Barlow Cond.',   css:"'Barlow Condensed',Impact,sans-serif",  pro:true },
     { id:'teko',        name:'Teko',           css:"'Teko',Impact,sans-serif",              pro:true },
     { id:'russo',       name:'Russo One',      css:"'Russo One',Impact,sans-serif",         pro:true },
     { id:'bangers',     name:'Bangers',        css:"'Bangers',Impact,sans-serif",           pro:true },
     { id:'space',       name:'Space Grotesk',  css:"'Space Grotesk',sans-serif",            pro:true },
-    { id:'nunito',      name:'Nunito',         css:"'Nunito',sans-serif",                   pro:true },
+    { id:'nunito',      name:'Nunito',         css:"'Nunito',sans-serif",                   pro:false },
     { id:'cinzel',      name:'Cinzel',         css:"'Cinzel',Georgia,serif",                pro:true },
     { id:'graduate',    name:'Graduate',       css:"'Graduate',Georgia,serif",              pro:true },
     { id:'pacifico',    name:'Pacifico',       css:"'Pacifico',cursive",                    pro:true },
@@ -45,7 +45,7 @@
     bgMode: 'template',
     bgSolid: '#0f172a',
     bgFrom: '#0f172a', bgTo: '#1e293b', bgAngle: 135,
-    bgImage: null, photoOverlayOpacity: 0.50,
+    bgImage: null, photoOverlayOpacity: 0.50, bgImageOffsetX: 0, bgImageOffsetY: 0, bgImageZoom: 1.0,
     showOverlay: true,
     elements: [
       { id:'line1',    label:'Line 1',   text:'YOUR BIG',   x:640, y:400, size:175, fontId:'impact', color:'#ffffff', stroke:'#000000', strokeOn:true,  sw:0.08, align:'center', visible:true, bold:true  },
@@ -126,9 +126,11 @@
 
     if (mode === 'photo' && st.bgImage) {
       var img = st.bgImage;
-      var scale = Math.max(cW / img.width, cH / img.height);
+      var zoom = st.bgImageZoom || 1.0;
+      var scale = Math.max(cW / img.width, cH / img.height) * zoom;
       var dw = img.width * scale, dh = img.height * scale;
-      c.drawImage(img, (cW - dw) / 2, (cH - dh) / 2, dw, dh);
+      var ox = st.bgImageOffsetX || 0, oy = st.bgImageOffsetY || 0;
+      c.drawImage(img, (cW - dw) / 2 + ox, (cH - dh) / 2 + oy, dw, dh);
       c.fillStyle = 'rgba(0,0,0,' + (st.photoOverlayOpacity || 0.5) + ')';
       c.fillRect(0, 0, cW, cH);
       var scrim = c.createLinearGradient(0, cH * 0.38, 0, cH);
@@ -705,6 +707,8 @@
     canvas.addEventListener('touchmove',  onPointerMove, { passive: false });
     canvas.addEventListener('touchend',   onPointerUp);
 
+    var photoDrag = { active: false, ox: 0, oy: 0, startOffX: 0, startOffY: 0 };
+
     function onPointerDown(evt) {
       evt.preventDefault();
       var pt    = canvasToBuffer(evt);
@@ -722,6 +726,13 @@
           canvas.style.cursor = 'grabbing';
         }
         scheduleRender();
+      } else if (state.bgMode === 'photo' && state.bgImage) {
+        /* drag the background photo */
+        photoDrag.active = true;
+        photoDrag.ox = pt.x; photoDrag.oy = pt.y;
+        photoDrag.startOffX = state.bgImageOffsetX || 0;
+        photoDrag.startOffY = state.bgImageOffsetY || 0;
+        canvas.style.cursor = 'move';
       } else {
         state.selectedId = null;
         syncElementEditor();
@@ -733,20 +744,28 @@
     function onPointerMove(evt) {
       evt.preventDefault();
       var pt = canvasToBuffer(evt);
-      if (!drag.active) {
-        canvas.style.cursor = hitTest(pt.x, pt.y) ? 'grab' : 'default';
+      if (drag.active) {
+        var el = getEl(drag.id);
+        if (!el) return;
+        el.x = Math.round(drag.elx + (pt.x - drag.ox));
+        el.y = Math.round(drag.ely + (pt.y - drag.oy));
+        scheduleRender();
         return;
       }
-      var el = getEl(drag.id);
-      if (!el) return;
-      el.x = Math.round(drag.elx + (pt.x - drag.ox));
-      el.y = Math.round(drag.ely + (pt.y - drag.oy));
-      scheduleRender();
+      if (photoDrag.active) {
+        state.bgImageOffsetX = photoDrag.startOffX + (pt.x - photoDrag.ox);
+        state.bgImageOffsetY = photoDrag.startOffY + (pt.y - photoDrag.oy);
+        scheduleRender();
+        return;
+      }
+      var hit = hitTest(pt.x, pt.y);
+      canvas.style.cursor = hit ? 'grab' : (state.bgMode === 'photo' && state.bgImage ? 'move' : 'default');
     }
 
     function onPointerUp() {
       drag.active = false;
-      mainCanvas.style.cursor = 'default';
+      photoDrag.active = false;
+      mainCanvas.style.cursor = state.bgMode === 'photo' && state.bgImage ? 'move' : 'default';
     }
   }
 
@@ -825,6 +844,14 @@
       state.bgImage = null;
       if (uploadEl) uploadEl.value = '';
       removeBg.style.display = 'none';
+      scheduleRender();
+    });
+
+    var photoZoom = document.getElementById('photo-zoom');
+    var photoZoomVal = document.getElementById('photo-zoom-val');
+    if (photoZoom) photoZoom.addEventListener('input', function(){
+      state.bgImageZoom = photoZoom.value / 100;
+      if (photoZoomVal) photoZoomVal.textContent = photoZoom.value;
       scheduleRender();
     });
 
